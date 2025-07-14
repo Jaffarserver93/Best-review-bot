@@ -16,46 +16,51 @@ module.exports = {
     const reviews = await Review.find({ guildId: interaction.guild.id });
     const averageRating = reviews.length ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1) : 0;
     const serverCount = interaction.client.guilds.cache.size;
-    const userCount = interaction.client.users.cache.size; // Approximate; actual unique users require more tracking
+    const userCount = interaction.client.users.cache.size;
 
     const memoryUsage = process.memoryUsage();
     const memoryMb = (memoryUsage.heapUsed / 1024 / 1024).toFixed(2);
     const memoryTotalMb = (memoryUsage.heapTotal / 1024 / 1024).toFixed(2);
 
     const embed = {
-      color: 0xff00ff, // Purple to match the theme
-      title: `:2.: Hydra Reviews Bot Info`,
+      color: 0xff00ff,
+      title: `<:emoji_83:1394044953277239436> JXFRCloud Reviews Bot Info`,
+      thumbnail: {
+        url: interaction.guild.iconURL() || '', // Use server logo as thumbnail
+      },
       fields: [
         {
-          name: 'Bot Overview',
+          name: '<a:rules_book:1393638717968748579> Bot Overview',
           value: [
-            `• Tag: ${botTag}`,
-            `• Review: JXFRCloud Review#4509`, // Hardcoded for now; adjust as needed
-            `• ID: ${botId}`,
-            `• Created: ${createdAt}`,
-            `• Online Since: ${uptimeMinutes} minutes ago`
+            `- **Tag:**  ${botTag} JXFRCloud Review#4509`, // Added comma here
+            `- **ID:** ${botId}`,
+            `- **Created:** ${createdAt}`,
+            `- **Online Since:** ${uptimeMinutes} minutes ago`
           ].join('\n'),
         },
         {
-          name: 'Review Stats',
+          name: '<:rfemoji:1394206641435443391> Review Stats',
           value: [
-            `• Total Reviews: ${totalReviews}`,
-            `• Average Rating: ${averageRating}/5`,
-            `• Servers: ${serverCount}`,
-            `• Users: ${userCount}`
+            `- **Total Reviews:** ${totalReviews}`,
+            `- **Average Rating:** ${averageRating}/5`,
+            `- **Servers:** ${serverCount}`,
+            `- **Users:** ${userCount}`
           ].join('\n'),
         },
         {
-          name: 'System Info',
+          name: '<:disk:1393638734666404064> System Info',
           value: [
-            `• Memory Usage: ${memoryMb} MB / ${memoryTotalMb} MB`,
-            `• CPU Cores: 0`, // Requires os-utils for accurate data
-            `• Node.js: v${process.version}`,
-            `• Discord.js: v14.21.0` // Match the version in package.json
+            `- **Memory Usage:** ${memoryMb} MB / ${memoryTotalMb} MB`,
+            `- **CPU Cores:** 0`,
+            `- **Node.js:** v${process.version}`,
+            `- **Discord.js:** v14.21.0`
           ].join('\n'),
         },
       ],
-      footer: { text: `Requested by ${interaction.user.tag} | Today at ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}` },
+      footer: {
+        text: `Requested by ${interaction.user.username} | Today at ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })}`,
+        icon_url: interaction.user.displayAvatarURL({ dynamic: true }),
+      },
     };
 
     await interaction.reply({ embeds: [embed] });
